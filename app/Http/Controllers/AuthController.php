@@ -3,9 +3,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 class AuthController extends Controller
@@ -13,7 +16,7 @@ class AuthController extends Controller
     /**
      * Registro de usuario
      */
-    public function signUp(Request $request)
+    public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string',
