@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PacienteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,21 +23,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group([
     'prefix' => 'auth'
 ], function () {
-    Route::post('login', 'AuthController@login');
+    Route::post('login', [AuthController::class, 'login']);
     Route::post('signup', [AuthController::class, 'register']);
 
     Route::group([
       'middleware' => 'auth:api'
     ], function() {
-        Route::get('logout', 'AuthController@logout');
-        Route::get('user', 'AuthController@user');
+        Route::get('logout', [AuthController::class, 'logout']);
+        Route::get('user', [AuthController::class, 'user']);
     });
 });
-
-/*Route::group([
-    'prefix' => 'api'
-], function(){
-    Route::get('pacientes', 'PacienteController@show');
-});*/
 
 
