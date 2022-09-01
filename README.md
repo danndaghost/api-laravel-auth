@@ -64,3 +64,26 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+## Install
+'''
+git clone [URL REPO]
+composer update
+cp .env.example .env
+[create database/schema for auth]
+[modify database/schema connection]
+php artisan migrate
+php artisan passport:install
+php artisan key:generate
+'''
+
+
+## Use
+
+Always call the method with the header Accept: 'application/json' for the validation return json messages
+
+
+## Tips
+https://www.tutsmake.com/laravel-9-rest-api-with-passport-authentication-tutorial/
+
