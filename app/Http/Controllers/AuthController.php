@@ -1,88 +1,76 @@
-<?php 
-
+<?php
 
 namespace App\Http\Controllers;
 
 use App\Models\User;
-
-//use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-//use Illuminate\Foundation\Bus\DispatchesJobs;
-//use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
-//use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * Registro de usuario
-     */
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string'
+        $validated = $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|unique:users',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
+        $user = User::create([
+            'name'     => $validated['name'],
+            'email'    => $validated['email'],
+            'password' => bcrypt($validated['password']),
         ]);
+
+        // Asignar rol por defecto
+        $user->assignRole('viewer');
 
         return response()->json([
-            'message' => 'Successfully created user!'
+            'message' => 'Usuario registrado correctamente',
+            'user'    => $user,
         ], 201);
     }
 
-    /**
-     * Inicio de sesión y creación de token
-     */
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-            'remember_me' => 'boolean'
+            'email'    => 'required|email',
+            'password' => 'required',
         ]);
 
-        $credentials = request(['email', 'password']);
+        $user = User::where('email', $request->email)->first();
 
-        if (!auth()->attempt($credentials))
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['Credenciales inválidas.'],
+            ]);
+        }
 
-
-        $user = auth()->user();
-        $tokenResult = $user->createToken('authToken');
+        $token = $user->createToken('authToken')->accessToken;
 
         return response()->json([
-            'user' => $user,
-            'access_token' => $tokenResult->accessToken,
-            //'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString()
+            'user'  => $user,
+            'roles' => $user->getRoleNames(),
+            'token' => $token,
         ]);
     }
 
-    /**
-     * Cierre de sesión (anular el token)
-     */
+    public function me(Request $request)
+    {
+        return response()->json([
+            'user'  => $request->user(),
+            'roles' => $request->user()->getRoleNames(),
+            'permissions' => $request->user()->getAllPermissions()->pluck('name'),
+        ]);
+    }
+
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();
 
         return response()->json([
-            'message' => 'Successfully logged out'
+            'message' => 'Sesión cerrada correctamente',
         ]);
     }
-
-    /**
-     * Obtener el objeto User como json
-     */
-    public function user(Request $request)
-    {
-        return response()->json($request->user());
-    }
 }
-
-

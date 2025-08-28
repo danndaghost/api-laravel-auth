@@ -1,37 +1,32 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PacienteController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+// Rutas públicas
+Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Rutas protegidas
+Route::middleware('auth:api')->group(function () {
+    // Auth
+    Route::get('/auth/me', [AuthController::class, 'me']);
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
 
-Route::group([
-    'prefix' => 'auth'
-], function () {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('signup', [AuthController::class, 'register']);
+    // Solo admin
+    Route::middleware('role:admin')->group(function () {
+        Route::apiResource('roles', RoleController::class);
+        Route::post('roles/{role}/permissions', [RoleController::class, 'assignPermissions']);
 
-    Route::group([
-      'middleware' => 'auth:api'
-    ], function() {
-        Route::get('logout', [AuthController::class, 'logout']);
-        Route::get('user', [AuthController::class, 'user']);
+        Route::apiResource('permissions', PermissionController::class);
+
+        Route::apiResource('users', UserController::class);
+        Route::post('users/{user}/roles', [UserController::class, 'assignRoles']);
+        Route::post('users/{user}/permissions', [UserController::class, 'assignPermissions']);
     });
+
+    // Ejemplos de permisos
+    Route::get('/admin/dashboard', fn() => response()->json(['msg' => 'Panel de admin']))->middleware('role:admin');
+    Route::get('/reports/view', fn() => response()->json(['msg' => 'Reportes']))->middleware('permission:view reports');
+    Route::get('/articles/edit', fn() => response()->json(['msg' => 'Editor de artículos']))->middleware('permission:edit articles');
 });
-
-
