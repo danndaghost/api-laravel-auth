@@ -1,11 +1,12 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
 // Rutas públicas
 Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/login', [AuthController::class, 'login']);  // Cambiado a AuthController
 
 // Rutas protegidas
 Route::middleware('auth:api')->group(function () {

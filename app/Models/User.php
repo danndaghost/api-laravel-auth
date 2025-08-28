@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, HasRoles;
+    use HasApiTokens, HasRoles, Notifiable;
 
     protected $fillable = [
         'name',
@@ -26,4 +26,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    protected $with = ['roles', 'permissions'];
+
+    public function findForPassport($username)
+    {
+        return $this->where('email', $username)->first();
+    }
 }
