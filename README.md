@@ -1,89 +1,392 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Laravel Auth Microservice Skeleton
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Un microservicio de autenticación completo construido con Laravel 12, que incluye OAuth2 con Laravel Passport y gestión de roles/permisos con Spatie Laravel Permission.
 
-## About Laravel
+## 🚀 Características
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Autenticación OAuth2** con Laravel Passport
+- **Sistema de Roles y Permisos** con Spatie Laravel Permission
+- **API RESTful** completamente documentada
+- **Docker Ready** con configuración incluida
+- **Laravel 12** con PHP 8.2
+- **Middleware de autenticación** para proteger rutas
+- **Gestión completa de usuarios**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 Requisitos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP >= 8.2
+- Composer
+- MySQL 8.0
+- Redis (opcional, para caché)
+- Docker y Docker Compose (opcional)
 
-## Learning Laravel
+## 🛠️ Tecnologías
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Framework**: Laravel 12.0
+- **PHP**: 8.2
+- **Autenticación**: Laravel Passport 12.0
+- **Roles/Permisos**: Spatie Laravel Permission 6.0
+- **Base de datos**: MySQL 8.0
+- **Cache**: Redis
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📦 Instalación
 
-## Laravel Sponsors
+### Opción 1: Instalación tradicional
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+1. Clonar el repositorio:
+```bash
+git clone https://github.com/tu-usuario/tracking-auth.git
+cd tracking-auth
+```
 
-### Premium Partners
+2. Instalar dependencias:
+```bash
+composer install
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-- **[Romega Software](https://romegasoftware.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-
-## Install
-'''
-git clone [URL REPO]
-composer update
+3. Copiar archivo de configuración:
+```bash
 cp .env.example .env
-[create database/schema for auth]
-[modify database/schema connection]
-php artisan migrate
-php artisan passport:install
+```
+
+4. Generar clave de aplicación:
+```bash
 php artisan key:generate
-'''
+```
 
+5. Configurar base de datos en `.env`:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel_auth
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_password
+```
 
-## Use
+6. Ejecutar migraciones:
+```bash
+php artisan migrate
+```
 
-Always call the method with the header Accept: 'application/json' for the validation return json messages
+7. Instalar Laravel Passport:
+```bash
+php artisan passport:install
+```
 
+8. Crear roles y permisos iniciales:
+```bash
+php artisan db:seed
+```
 
-## Tips
-https://www.tutsmake.com/laravel-9-rest-api-with-passport-authentication-tutorial/
+9. Iniciar servidor de desarrollo:
+```bash
+php artisan serve
+```
 
+### Opción 2: Instalación con Docker
+
+1. Clonar el repositorio:
+```bash
+git clone https://github.com/tu-usuario/tracking-auth.git
+cd tracking-auth
+```
+
+2. Copiar archivo de configuración:
+```bash
+cp .env.example .env
+```
+
+3. Construir y ejecutar contenedores:
+```bash
+docker-compose up -d --build
+```
+
+4. Ejecutar migraciones dentro del contenedor:
+```bash
+docker-compose exec app php artisan migrate
+docker-compose exec app php artisan passport:install
+docker-compose exec app php artisan db:seed
+```
+
+La aplicación estará disponible en:
+- **API**: http://localhost:8080
+- **phpMyAdmin**: http://localhost:8081
+
+## 📚 Documentación de API
+
+### Base URL
+```
+http://localhost:8080/api
+```
+
+### Autenticación
+
+#### Registro de usuario
+```http
+POST /auth/register
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+}
+```
+
+**Respuesta exitosa (201):**
+```json
+{
+    "message": "Usuario registrado correctamente",
+    "user": {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@example.com",
+        "created_at": "2025-01-09T12:00:00.000000Z"
+    }
+}
+```
+
+#### Login
+```http
+POST /auth/login
+Content-Type: application/json
+
+{
+    "email": "john@example.com",
+    "password": "password123"
+}
+```
+
+**Respuesta exitosa (200):**
+```json
+{
+    "user": {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@example.com"
+    },
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...",
+    "token_type": "Bearer"
+}
+```
+
+#### Obtener información del usuario autenticado
+```http
+GET /auth/me
+Authorization: Bearer {access_token}
+```
+
+**Respuesta exitosa (200):**
+```json
+{
+    "user": {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@example.com"
+    },
+    "roles": ["viewer"],
+    "permissions": ["view reports"]
+}
+```
+
+#### Logout
+```http
+POST /auth/logout
+Authorization: Bearer {access_token}
+```
+
+**Respuesta exitosa (200):**
+```json
+{
+    "message": "Sesión cerrada correctamente"
+}
+```
+
+### Gestión de Roles (Solo Admin)
+
+#### Listar roles
+```http
+GET /roles
+Authorization: Bearer {admin_access_token}
+```
+
+#### Crear rol
+```http
+POST /roles
+Authorization: Bearer {admin_access_token}
+Content-Type: application/json
+
+{
+    "name": "editor",
+    "guard_name": "api"
+}
+```
+
+#### Asignar permisos a un rol
+```http
+POST /roles/{role}/permissions
+Authorization: Bearer {admin_access_token}
+Content-Type: application/json
+
+{
+    "permissions": ["edit articles", "publish articles"]
+}
+```
+
+### Gestión de Permisos (Solo Admin)
+
+#### Listar permisos
+```http
+GET /permissions
+Authorization: Bearer {admin_access_token}
+```
+
+#### Crear permiso
+```http
+POST /permissions
+Authorization: Bearer {admin_access_token}
+Content-Type: application/json
+
+{
+    "name": "delete articles",
+    "guard_name": "api"
+}
+```
+
+### Gestión de Usuarios (Solo Admin)
+
+#### Listar usuarios
+```http
+GET /users
+Authorization: Bearer {admin_access_token}
+```
+
+#### Crear usuario
+```http
+POST /users
+Authorization: Bearer {admin_access_token}
+Content-Type: application/json
+
+{
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "password": "password123"
+}
+```
+
+#### Asignar roles a un usuario
+```http
+POST /users/{user}/roles
+Authorization: Bearer {admin_access_token}
+Content-Type: application/json
+
+{
+    "roles": ["editor", "moderator"]
+}
+```
+
+#### Asignar permisos directos a un usuario
+```http
+POST /users/{user}/permissions
+Authorization: Bearer {admin_access_token}
+Content-Type: application/json
+
+{
+    "permissions": ["special permission"]
+}
+```
+
+### Rutas de ejemplo con permisos
+
+#### Dashboard de Admin (requiere rol admin)
+```http
+GET /admin/dashboard
+Authorization: Bearer {admin_access_token}
+```
+
+#### Ver reportes (requiere permiso 'view reports')
+```http
+GET /reports/view
+Authorization: Bearer {access_token}
+```
+
+#### Editar artículos (requiere permiso 'edit articles')
+```http
+GET /articles/edit
+Authorization: Bearer {access_token}
+```
+
+## 🔒 Roles y Permisos por defecto
+
+### Roles
+- **admin**: Acceso completo al sistema
+- **editor**: Puede editar y publicar contenido
+- **viewer**: Solo puede ver contenido (rol por defecto para nuevos usuarios)
+
+### Permisos
+- `view reports`: Ver reportes del sistema
+- `edit articles`: Editar artículos
+- `publish articles`: Publicar artículos
+- `manage users`: Gestionar usuarios
+- `manage roles`: Gestionar roles y permisos
+
+## 🐳 Docker
+
+### Servicios incluidos
+
+- **app**: Aplicación Laravel (PHP 8.2 + Nginx)
+- **db**: MySQL 8.0
+- **redis**: Redis para caché
+- **phpmyadmin**: Interfaz web para MySQL
+
+### Comandos útiles de Docker
+
+```bash
+# Ver logs
+docker-compose logs -f app
+
+# Ejecutar comandos artisan
+docker-compose exec app php artisan [comando]
+
+# Acceder al contenedor
+docker-compose exec app bash
+
+# Detener servicios
+docker-compose down
+
+# Detener y eliminar volúmenes
+docker-compose down -v
+```
+
+## 🧪 Testing
+
+Ejecutar tests:
+```bash
+php artisan test
+# o con Docker
+docker-compose exec app php artisan test
+```
+
+## 🤝 Contribuir
+
+1. Fork el proyecto
+2. Crea tu rama de características (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+## 👥 Autor
+
+- **Tu Nombre** - *Trabajo inicial* - [tu-usuario](https://github.com/tu-usuario)
+
+## 🙏 Agradecimientos
+
+- Laravel Team por el excelente framework
+- Spatie por el paquete de roles y permisos
+- La comunidad de Laravel por su apoyo continuo
