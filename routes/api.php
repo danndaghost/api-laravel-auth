@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UserController;
 
 // Rutas públicas
 Route::post('/auth/register', [AuthController::class, 'register']);
@@ -14,6 +17,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
+    // Ruta temporal de users sin middleware de rol para testing
+    Route::get('/users', [UserController::class, 'index']);
+
     // Solo admin
     Route::middleware('role:admin')->group(function () {
         Route::apiResource('roles', RoleController::class);
@@ -21,7 +27,7 @@ Route::middleware('auth:api')->group(function () {
 
         Route::apiResource('permissions', PermissionController::class);
 
-        Route::apiResource('users', UserController::class);
+        // Route::apiResource('users', UserController::class); // Comentado temporalmente
         Route::post('users/{user}/roles', [UserController::class, 'assignRoles']);
         Route::post('users/{user}/permissions', [UserController::class, 'assignPermissions']);
     });

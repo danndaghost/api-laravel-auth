@@ -49,6 +49,10 @@ class AuthController extends Controller
                 ], 401);
             }
 
+            // Cargar roles y permisos del usuario
+            $user->load(['roles.permissions', 'permissions']);
+            $user->all_permissions = $user->getAllPermissions();
+
             $token = $user->createToken('auth_token');
 
             if (!$token) {
@@ -77,11 +81,13 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        return response()->json([
-            'user'  => $request->user(),
-            'roles' => $request->user()->getRoleNames(),
-            'permissions' => $request->user()->getAllPermissions()->pluck('name'),
-        ]);
+        $user = $request->user();
+        
+        // Cargar roles y permisos
+        $user->load(['roles.permissions', 'permissions']);
+        $user->all_permissions = $user->getAllPermissions();
+        
+        return response()->json($user);
     }
 
     public function logout(Request $request)
