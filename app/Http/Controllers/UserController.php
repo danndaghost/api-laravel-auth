@@ -70,29 +70,41 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:255|unique:users',
+            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'roles' => 'array',
+            'roles' => 'sometimes|array',
             'roles.*' => 'exists:roles,id',
+            'permissions' => 'sometimes|array',
+            'permissions.*' => 'exists:permissions,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        // Crear el usuario
         $user = User::create([
-            'username' => $request->username,
+            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'status' => true,
         ]);
 
-        if ($request->has('roles')) {
+        // Asignar roles si se proporcionaron
+        if ($request->has('roles') && !empty($request->roles)) {
             $user->roles()->attach($request->roles);
         }
 
-        return response()->json($user->load('roles'), 201);
+        // Asignar permisos directos si se proporcionaron
+        if ($request->has('permissions') && !empty($request->permissions)) {
+            $user->permissions()->attach($request->permissions);
+        }
+
+        // Cargar relaciones y devolver respuesta
+        $user->load(['roles.permissions', 'permissions']);
+        $user->all_permissions = $user->getAllPermissions();
+
+        return response()->json($user, 201);
     }
 
     /**

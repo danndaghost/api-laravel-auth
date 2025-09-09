@@ -11,14 +11,16 @@ use App\Http\Controllers\UserController;
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);  // Cambiado a AuthController
 
+// Rutas de reset de password (públicas)
+Route::post('/auth/password/reset-request', [AuthController::class, 'requestPasswordReset']);
+Route::post('/auth/password/reset-confirm', [AuthController::class, 'confirmPasswordReset']);
+
 // Rutas protegidas
 Route::middleware('auth:api')->group(function () {
     // Auth
     Route::get('/auth/me', [AuthController::class, 'me']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
-
-    // Ruta temporal de users sin middleware de rol para testing
-    Route::get('/users', [UserController::class, 'index']);
+    Route::post('/auth/change-password', [AuthController::class, 'changePassword']);
 
     // Solo admin
     Route::middleware('role:admin')->group(function () {
@@ -27,7 +29,7 @@ Route::middleware('auth:api')->group(function () {
 
         Route::apiResource('permissions', PermissionController::class);
 
-        // Route::apiResource('users', UserController::class); // Comentado temporalmente
+        Route::apiResource('users', UserController::class);
         Route::post('users/{user}/roles', [UserController::class, 'assignRoles']);
         Route::post('users/{user}/permissions', [UserController::class, 'assignPermissions']);
     });

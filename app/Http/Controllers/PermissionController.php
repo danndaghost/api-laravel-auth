@@ -14,9 +14,7 @@ class PermissionController extends Controller
     {
         $permissions = Permission::with('roles')->get();
 
-        return response()->json([
-            'permissions' => $permissions
-        ]);
+        return response()->json($permissions);
     }
 
     /**
